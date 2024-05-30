@@ -1,77 +1,136 @@
 #include "linker.h"
 
+void disturbance(std::vector<double> THETA, int rounds) {
 
-void perturbed(std::vector<double> THETA, int rounds) {
-	std::ofstream radius;
-	radius.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\radius.txt");
-	radius << std::setprecision(30);
-	std::ofstream p;
-	p.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\p.txt");
-	p << std::setprecision(30);
-	std::ofstream ecc;
-	ecc.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\ecc.txt");
-	ecc << std::setprecision(30);
-	std::ofstream omega;
-	omega.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\omega.txt");
-	omega << std::setprecision(30);
-	std::ofstream i;
-	i.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\i.txt");
-	i << std::setprecision(30);
-	std::ofstream sigma;
-	sigma.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\sigma.txt");
-	sigma << std::setprecision(30);
-	std::ofstream S;
-	S.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\S.txt");
-	S << std::setprecision(30);
-	std::ofstream T;
-	T.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\T.txt");
-	T << std::setprecision(30);
-	std::ofstream W;
-	W.open("C:\\Users\\1\\Desktop\\MSF_lab_02\\log_dir\\W.txt");
-	double tempP = P;
-	double tempECC = ECC;
-	double tempOm = U;
-	double tempS;
-	double tempT;
-	std::vector<double>::iterator iter = THETA.begin();
-	int tmp = 0;
+    double tempP = P;
+    double tempE = e;
+    double tempU = U;
+    double tempo = 0;
+    double tempO = OMEGA;
+    double tempS ;
+    double tempT;
+    double tempW;
+    double tempI = I;
+    int tmp = 0;
 
-	for (int step = 0; step < (360 * rounds) + 1; step += 15) {
-		double tempTHETA = *(iter + tmp);
-		double tempR = tempP / (1.0 + tempECC * cos(tempTHETA));
-		double V = m / tempP * (1.0 + pow(tempECC, 2.0) + 2 * tempECC * cos(tempTHETA));
-		double Fa = (Cxa * AtmDensity * pow(V, 2.0) * Sa) / (2.0 * m);
+    std::vector<double>::iterator iter = THETA.begin();
 
-		tempS = -(Fa * tempECC * sin(tempTHETA)) / (sqrt(1.0 + pow(tempECC, 2.0) + 2.0 * tempECC * cos(tempTHETA)));
-		tempT = -(Fa * (1.0 + tempECC * cos(tempTHETA))) / (sqrt(1.0 + pow(tempECC, 2.0) + 2.0 * tempECC * cos(tempTHETA)));
-		double pChange = (2.0 / Mu) * pow(tempR, 3.0) * tempT;
-		double eChange = (pow(tempR, 2.0) / Mu) * (tempS * sin(tempTHETA) + tempT * ((1.0 + (tempR / tempP)) * cos(tempTHETA) + tempECC * (tempR / tempP)));
-		double omChange = (pow(tempR, 2.0) / (Mu * tempECC)) * (tempT * (1.0 + (tempR / tempP)) * cos(tempTHETA) - tempS * cos(tempTHETA));
-		std::cout << "delta p = " << pChange << "; deltaECC = " << eChange << "; delta OMEGA = " << omChange << "." << std::endl;
+    std::ofstream radius;
+    radius.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/Radius.txt");
+    radius << std::setprecision(30);
 
+    std::ofstream p;
+    p.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/Focal_parameter.txt");
+    p << std::setprecision(30);
 
-		radius << tempR << " ";
-		p << tempP << " ";
-		ecc << tempECC << " ";
-		omega << tempOm << " ";
-		i << INC << " ";
-		sigma << SIGMA << " ";
-		S << tempS << " ";
-		T << tempT << " ";
-		W << 0.0 << " ";
+    std::ofstream ecc;
+    ecc.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/Eccentricity.txt");
+    ecc << std::setprecision(30);
 
-		tempP += (15.0 * PI / 180.0) * pChange;
-		tempECC += (15.0 * PI / 180.0) * eChange;
-		tempOm += (15.0 * PI / 180.0) * omChange;
-		tmp++;
-	}
-	radius.close();
-	p.close();
-	ecc.close();
-	omega.close();
-	i.close();
-	sigma.close();
-	S.close();
-	T.close();
-	W.close();
+    std::ofstream omega;
+    omega.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/Omega.txt");
+    omega << std::setprecision(30);
+
+    std::ofstream i;
+    i.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/Inclanation.txt");
+    i << std::setprecision(30);
+
+    std::ofstream sigma;
+    sigma.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/"
+        "The_longitude_of_the_ascending_node.txt");
+    sigma << std::setprecision(30);
+
+    std::ofstream S;
+    S.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/S.txt");
+    S << std::setprecision(30);
+
+    std::ofstream T;
+    T.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/T.txt");
+    T << std::setprecision(30);
+
+    std::ofstream W;
+    W.open("C:/projects/Visual Studio "
+        "Code/C_and_Cpp/laba_mkp/laba2_4sem/files/W.txt");
+    W << std::setprecision(30);
+
+    for (int step = 0; step < (360 * rounds) + 1; step += 15) {
+
+        double tempTHETA = *(iter + tmp);
+        double tempR = tempP / (1.0 + tempE * cos(tempTHETA));
+        double q = ((pow(Wz, 2.0) * pow(Re, 3.0)) / mu);
+        double Polar_compression = 1.0 / 298.25;
+        double param = mu * pow(Re, 2.0) * (Polar_compression - (q / 2.0));
+
+        tempS = (param / pow(tempR, 4.0)) * (3.0 * pow(sin(tempTHETA), 2.0) * pow(sin(tempI), 2.0) - 1.0);
+        tempT = -(param / pow(tempR, 4.0)) * (pow(sin(tempI), 2.0) * sin(2.0 * tempTHETA));
+        tempW = -(param / pow(tempR, 4.0)) * sin(2.0 * tempI) * sin(tempTHETA);
+
+        // std::cout << q << std::endl;
+        // std::cout << Polar_compression << std::endl;
+        // std::cout << param << std::endl;
+
+        double gamma = 1.0 - ((tempW * pow(tempR, 3.0)) / (mu * tempP)) *
+            sin(tempTHETA) * (cos(tempI) / sin(tempI));
+
+        double uChange = ((sqrt(mu * tempP) / pow(tempR, 2.0))) * gamma;
+
+        double pChange = ((2.0 * tempT) / gamma) * (pow(tempR, 3.0) / mu);
+
+        double eChange = (pow(tempR, 2.0) / gamma * mu) *
+            (tempS * sin(tempTHETA) +
+                tempT * ((1.0 + (tempR / tempP)) * cos(tempTHETA) +
+                    tempE * (tempR / tempP)));
+
+        double omChange = (pow(tempR, 2.0) / (gamma * mu * tempE)) *
+            (-tempS * cos(tempTHETA) +
+                tempT * (1.0 + (tempR / tempP) * sin(tempTHETA) -
+                    (tempW * (tempR / tempP) * tempE *
+                        (cos(tempI) / sin(tempI)) * sin(tempTHETA))));
+
+        double iChange =
+            (pow(tempR, 3.0) / (gamma * mu * tempP)) * (tempW * cos(tempTHETA));
+
+        double OmChange = (pow(tempR, 3.0) / (gamma * mu * tempP)) *
+            (tempW * (sin(tempTHETA) / sin(tempI)));
+
+        std::cout << "delta p = " << pChange << "; delta e = " << eChange
+            << "; delta OMEGA = " << omChange << "; delta i = " << iChange
+            << "; delta OMEGABOL = " << OmChange << "." << std::endl;
+
+        radius << tempR << " ";
+        p << tempP << " ";
+        ecc << tempE << " ";
+        omega << tempU << " ";
+        i << I << " ";
+        sigma << OMEGA << " ";
+        S << tempS << " ";
+        T << tempT << " ";
+        W << tempW << " ";
+
+        tempP += (15.0 * PI / 180.0) * pChange;
+        tempE += (15.0 * PI / 180.0) * eChange;
+        tempo += (15.0 * PI / 180.0) * omChange;
+        tempU += (15.0 * PI / 180.0) * uChange;
+        tempI += (15.0 * PI / 180.0) * iChange;
+        tempO += (15.0 * PI / 180.0) * OmChange;
+        tmp++;
+    }
+
+    radius.close();
+    p.close();
+    ecc.close();
+    omega.close();
+    i.close();
+    sigma.close();
+    S.close();
+    T.close();
+    W.close();
 }
